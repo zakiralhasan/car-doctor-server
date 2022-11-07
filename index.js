@@ -69,6 +69,18 @@ async function run() {
       const result = await orderCollcetion.deleteOne(query);
       res.send(result);
     });
+
+    //update single data at mongodb server
+    app.patch("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      // const status = req.body.status;
+      const query = { _id: ObjectId(id) };
+      const updatedData = {
+        $set: { status: "Approved" },
+      };
+      const result = await orderCollcetion.updateOne(query, updatedData);
+      res.send(result);
+    });
   } finally {
   }
 }
