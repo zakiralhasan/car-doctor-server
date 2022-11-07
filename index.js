@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 
 //used for .env file active or use.
@@ -32,6 +32,14 @@ async function run() {
       const query = {};
       const cursor = serviceClloection.find(query);
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    //get user's single data from mongoDB server
+    app.get("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: id };
+      const result = await serviceClloection.findOne(query);
       res.send(result);
     });
   } finally {
