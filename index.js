@@ -39,7 +39,7 @@ async function run() {
     //get user's single data from mongoDB server
     app.get("/services/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: id };
+      const query = { _id: ObjectId(id) };
       const result = await serviceClloection.findOne(query);
       res.send(result);
     });
@@ -53,9 +53,20 @@ async function run() {
 
     //get user's order data from mongoDB server
     app.get("/orders", async (req, res) => {
-      const query = {};
+      let query = {};
+      if (req.query.email) {
+        query = { email: req.query.email };
+      }
       const cursor = orderCollcetion.find(query);
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    //delete single order from mongodb (orders) server
+    app.delete("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollcetion.deleteOne(query);
       res.send(result);
     });
   } finally {
