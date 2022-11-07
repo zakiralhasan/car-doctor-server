@@ -26,6 +26,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const serviceClloection = client.db("carDoctor").collection("services");
+    const orderCollcetion = client.db("carDoctor").collection("orders");
 
     //get user data from mongoDB server
     app.get("/services", async (req, res) => {
@@ -40,6 +41,21 @@ async function run() {
       const id = req.params.id;
       const query = { _id: id };
       const result = await serviceClloection.findOne(query);
+      res.send(result);
+    });
+
+    //post or create user's order data at mongodb server
+    app.post("/orders", async (req, res) => {
+      const order = req.body;
+      const result = await orderCollcetion.insertOne(order);
+      res.send(result);
+    });
+
+    //get user's order data from mongoDB server
+    app.get("/orders", async (req, res) => {
+      const query = {};
+      const cursor = orderCollcetion.find(query);
+      const result = await cursor.toArray();
       res.send(result);
     });
   } finally {
